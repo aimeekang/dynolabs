@@ -1,8 +1,7 @@
-import { type AppType } from "next/app";
+import type { AppProps } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 
-
-const MyApp: AppType = ({ Component, pageProps }) => {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ClerkProvider>
       <main>
@@ -10,6 +9,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </main>
     </ClerkProvider>
   );
-};
+}
 
 export default MyApp;

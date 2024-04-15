@@ -1,10 +1,47 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { useState } from "react";
+
+export interface AreaMetadata {
+  lat: number;
+  lng: number;
+}
+
+export interface ChildArea {
+  area_name: string;
+  metadata: AreaMetadata;
+}
+
+export interface Area {
+  area_name: string;
+  children: ChildArea[];
+}
+
+export interface GraphQLResponse {
+  data: {
+    areas: Area[];
+  }
+}
 
 export default function Home() {
   const router = useRouter();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
+  const [areaData, setAreaData] = useState<GraphQLResponse | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch("/api/fetchData");
+      const data = await res.json() as GraphQLResponse;
+      setAreaData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  if (!isLoaded) {
+    return <></>;
+  }
 
   return (
     <>
@@ -20,12 +57,24 @@ export default function Home() {
           ) : (
             <button
               onClick={() => router.push("/sign-in")}
+              type="button"
             >
               Sign in
             </button>
           )
         }
       </header>
+      <div>
+        <button
+          onClick={fetchData}
+          type="button"
+        >
+          Fetch Data
+        </button>
+        <div>
+          {areaData && <pre>{JSON.stringify(areaData, null, 2)}</pre>}
+        </div>
+      </div>
     </>
   );
 }

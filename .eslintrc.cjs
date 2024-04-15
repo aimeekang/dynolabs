@@ -47,6 +47,10 @@ const config = {
         allowTemplateLiterals: true,
       },
     ],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": [1, { extensions: [".jsx", ".tsx"] }],
+    "react/jsx-no-useless-fragment": "off",
+    "react/jsx-props-no-spreading": "off",
   },
 };
 module.exports = config;
